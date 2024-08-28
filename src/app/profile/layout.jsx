@@ -9,7 +9,7 @@ export default function ProfileLayout({ children }) {
     return (
       <html lang="en">
         <AuthProvider>
-        <body  className={clsx('', poppins.className)}>{children}</body>
+        <body  className={clsx('bg-slate-200/60', poppins.className)}>{children}</body>
         </AuthProvider>
       </html>
     );
