@@ -4,7 +4,7 @@ import logo from '@/app/logo.png'
 import Image from 'next/image';
 import Search from './search'
 import Menu from '@components/menu'
-const Navbar = ({avatar, firstName, lastName, username}) => {
+const Navbar = ({avatar, firstName, lastName, username, showMenu}) => {
     const [menuOpen, setMenuOpen] = useState(false)
     return (
         <nav className='w-full '>
@@ -16,7 +16,7 @@ const Navbar = ({avatar, firstName, lastName, username}) => {
                 <ul className=''>
                     <li></li>
                 </ul>
-                <Menu avatar={avatar} firstName={firstName} lastName={lastName} username={username} />
+                {showMenu ? <Menu avatar={avatar} firstName={firstName} lastName={lastName} username={username} /> : ""}
                 </div>
             </div>
         </nav>

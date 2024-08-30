@@ -13,7 +13,7 @@ const {auth} = require('./middleware/authentication')
 const cors = require('cors')
 
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: `http://${process.env.HOST}:3000`,
     allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Authorization'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true, // allow session cookies

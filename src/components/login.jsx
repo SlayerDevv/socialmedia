@@ -2,12 +2,12 @@
 import React, { useState } from "react";
 import { useContext } from "react";
 import {AuthContext} from '@/context/AuthContext'
-import {useLogin} from '@/hooks/useLogin'
-require('dotenv').config({path: '../../backend/.env'})
+import {useAuth} from '@/hooks/useAuth'
+require('dotenv').config()
 const LoginComponent = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-   const {login, loading, error} = useLogin()
+   const {login, Error, loading} = useAuth()
     return (
         <div className="w-[450px] p-5 h-[450px] rounded-2xl bg-white bg-opacity-20 shadow-lg shadow-black/10 backdrop-blur-sm border border-white/30">
             <div className="text-5xl text-indigo-400 font-bold">Login</div>

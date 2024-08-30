@@ -1,58 +1,144 @@
-import Image from "next/image"
-import { useState, useEffect } from "react"
-import {useFile} from '../../hooks/useFile'
-const ProfileHeader = ({id,email, username, firstName, lastName, avatar}) => {
-    const {uploadFile} = useFile()
-        
+import Image from "next/image";
+import { useState, useEffect, useRef } from "react";
+import { useFile } from "../../hooks/useFile";
+const ProfileHeader = ({
+  id,
+  email,
+  username,
+  firstName,
+  lastName,
+  avatar,
+}) => {
+  const { uploadFile } = useFile();
+ let dialogRef = useRef(null)
+ const handleClick = (e) => {
+  if (dialogRef.current && !dialogRef.current.contains(e.target)){
+      dialogRef.current.close();
+  }
+}
+useEffect(() => {
+  const dialog = dialogRef.current;
+  if (dialog) {
+    const handleBackdropClick = (event) => {
+      if (event.target === dialog) {
+        dialog.close();
+      }
+    };
+  document.addEventListener("mousedown", handleBackdropClick);
+  return () => {
+      document.removeEventListener("mousedown", handleBackdropClick);
+  };
+}
+}, []);
 
-    const token = document.cookie.split('token=').pop().split(';').shift();
+  const token = document.cookie.split("token=").pop().split(";").shift();
 
   const UpdatePfp = (e) => {
-       
-       let file = e.target.files[0]
-       if (file) {
-        let formData = new FormData()
-        formData.append('avatar', file)
-            uploadFile(formData, token).then((data) => {
-            })
-
+    let file = e.target.files[0];
+    if (file) {
+      let formData = new FormData();
+      formData.append("avatar", file);
+      uploadFile(formData, token).then((data) => {});
     }
-        
-        
- }
-    return (
-        <div className="w-full" >
-            <div className="flex flex-col items-center ">
-            <div className="h-[280px] w-[720px]">
-            <Image src='http://localhost:3000/images/banner.png' width={820} height={312} className="rounded-b-md" />
-            </div>
-            <div className="flex bg-white rounded-xl space-y-[100px] border-b-[1px] border-slate-300 p-5">
-            <div className="flex space-y-4 items-start justify-start w-[680px] justify-between">
+  };
+  return (
+    <div className="w-[600px] small:min-w-[360px] medium:min-w-[375px] duration-500 ">
+      <div className="flex flex-col items-center justify-center space-y-1 ">
+        <div className=" bg-white shadow-[0_3px_10px_rgb(0,0,0,0.2)]  rounded-lg space-y-[20px] p-4 small:p-1">
+        <div className="shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
+          <img
+            src="http://105.110.206.237:3000/images/banner.png"
+            
+            className="rounded-md "
+          />
+        </div>
+          <div className="flex items-start justify-start justify-between ">
             <div className="flex">
-            <label htmlFor="pfpupload" className="cursor-pointer z-0"><Image id="pfp" unoptimized src={avatar} alt="pfp" width={170} height={170} className="rounded-full z-50" /></label>
-            <input onChange={(e) => UpdatePfp(e)} type="file" id="pfpupload" name="pfpupload" className="hidden" />
-            <div className="">
-            <h1 className="text-3xl font-bold font-poppins text-black">{firstName} {lastName}</h1>
-            <p className="text-sm ml-[2px] text-gray-600">@{username}</p>
-            <div className="flex mt-[20px] ml-[5px] items-center gap-1">
-            <p className="text-base text-gray-600 hover:text-gray-800">Followers: 0</p>
-            <span className="text-base text-gray-600">⋯</span>
-            <p className="text-base text-gray-600 hover:text-gray-800">Following: 0</p>
-            </div>
-            </div>
-            </div>
-            <button className="text-xl bg-slate-100 p-3 rounded-xl">Edit</button>    
-            </div>
-            </div>
-            <ul className="flex p-3 justify-start w-[680px] space-x-5 items-center">
-                <li className="p-3 bg-white text-base text-black rounded-xl  focus:bg-white cursor-pointer font-semibold"><a href="#" className="h-max w-max">Home</a></li>
-                <hr className="border-r-[1px] border-gray-500 h-4" />
-                <li className="p-3 hover:bg-slate-100 text-base text-black rounded-xl focus:border-b-4 cursor-pointer border-indigo-600 font-semibold"><a className="w-max h-max" href="">About</a></li>
-                
-            </ul>
-            </div>
-            </div>
-    )
-}
+              <label htmlFor="pfpupload" className="cursor-pointer w-[100px] h-[100px] ">
+                <img
+                  id="pfp"
+           
+                  src={avatar}
+                  alt="pfp"
+                  className="rounded-full shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
+                />
+              </label>
+              <input
+                onChange={(e) => UpdatePfp(e)}
+                type="file"
+                id="pfpupload"
+                name="pfpupload"
+                className="hidden"
+              />
+              <div className="flex-1">
+                <div>
+                <h1 className="text-3xl small:text-xl font-bold font-poppins text-black">
+                  {firstName} {lastName}
+                </h1>
+                <p className="text-sm ml-[5px] text-gray-600">@{username}</p>
+                </div>
 
-export default ProfileHeader
+                <div className="flex mt-[20px] ml-[5px] items-center flex-nowrap gap-1">
+                  <p className="text-base small:text-xs font-medium text-gray-600 hover:text-gray-800">
+                    Followers: 1M
+                  </p>
+                  <span className="text-base small:text-xs text-gray-600 font-medium">⋯</span>
+                  <p className="text-base small:text-xs font-medium text-gray-600 hover:text-gray-800">
+                    Following: 0
+                  </p>
+                </div>
+                <ul className="flex  mt-[44px] space-x-4 items-end justify-start">
+             <li className=" bg-white text-base text-black rounded-xl   cursor-pointer font-semibold">
+            <a href="#" className="h-max w-max focus:border-b-4 border-indigo-600 ">
+              Home
+            </a>
+          </li>
+          
+          <li className=" bg-white text-base text-black rounded-xl focus:border-b-4 cursor-pointer border-indigo-600 font-semibold">
+            <a className="w-max h-max" href="">
+              About
+            </a>
+          </li>
+        </ul>
+              </div>
+              
+            </div>
+            <button onClick={() => dialogRef.current.showModal()} className=" text-xl small:text-xs small:rounded-lg bg-slate-100 p-3  rounded-xl">
+              Edit
+            </button>
+            <dialog ref={dialogRef} id="dialog" className="fixed overflow-hidden top-[60%] right-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[350px] h-[400px] backdrop:backdrop-blur-sm rounded-2xl shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px]" >
+              <div className="flex relative space-x-7 p-3">
+              <div className="relative">
+                <label htmlFor="firstName" className="flex absolute -top-2 left-3 bg-white px-1 text-xs text-gray-500">FirstName</label>
+                <input
+                  size={11}
+                  type="text"
+                  id="firstName"
+                  name="firstName"
+                  className="border-2 outline-none border-gray-300 p-2 rounded-xl" />
+                  
+              </div>
+              <div className="relative">
+              <label htmlFor="firstName" className="flex absolute -top-2 left-3 bg-white px-1 text-xs text-gray-500">LastName</label>
+                <input
+                size={11}
+                  type="text"
+                  id="lastName"
+                  name="lastName"
+                  className="border-2 outline-none border-gray-300 p-2 rounded-xl" />
+              </div>
+              <div className="relative">
+              <button onClick={() => dialogRef.current.close()} className="absolute rounded-xl p-3 top-[335px] right-[30px] bg-indigo-400">Close</button>
+              </div>
+              </div>
+              
+            </dialog>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  );
+};
+
+export default ProfileHeader;

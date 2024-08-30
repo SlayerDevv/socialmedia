@@ -2,7 +2,7 @@ const express = require("express");
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 
-const GetUserByUsername = async (req, res) => {
+const GetByUsername = async (req, res) => {
   // const header = req.headers["authorization"];
   //const token = header.split(' ')[1];
   // if (!token){
@@ -20,7 +20,7 @@ const GetUserByUsername = async (req, res) => {
   }
 };
 
-const get_user = async (req, res) => {
+const getUser = async (req, res) => {
   const header = req.headers["authorization"];
   const token = header.split(" ")[1];
   if (!token) {
@@ -39,4 +39,4 @@ const get_user = async (req, res) => {
   }
 };
 
-module.exports = { GetUserByUsername, get_user };
+module.exports = { GetByUsername, getUser };

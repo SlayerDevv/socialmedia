@@ -3,9 +3,9 @@ import Image from "next/image"
 import { useState, useRef, useEffect } from "react";
 import clsx from "clsx";
 import { CircleUserRound, Settings, LogOut } from "lucide-react";
-import {useLogout} from '../hooks/useLogout'
+import {useAuth} from '../hooks/useAuth'
 const Menu = ({avatar, username, firstName, lastName}) => {
-    const {logout} = useLogout()
+    const {logout} = useAuth()
     const [Open, setOpen] = useState(false);
     const MenuRef = useRef(null)
     const handleClick = (e) => {

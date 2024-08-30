@@ -1,5 +1,4 @@
 /** @type {import('tailwindcss').Config}*/
-import {} from 'ta'
 module.exports = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -8,6 +7,23 @@ module.exports = {
   ],
   theme: {
     extend: {
+      screens: {
+        "small": {
+          min: "320px",
+          max: "360px",
+        },
+        "medium": {
+          max: "390px",
+          min: "375px"
+        },
+        "large": {
+          max: "428px",
+          min: "414px",
+        },
+        "extra-large": {
+          min: "480px",
+        },
+      },
       backgroundImage: {
 
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

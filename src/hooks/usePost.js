@@ -34,7 +34,7 @@ export const usePost = () => {
         const UpdatePost = async(id, title, content) => {
             try {
                 setLoading(true)
-                const res = await fetch(`http://154.251.141.17:5000/api/v1/posts/updatePost/${id}`, {
+                const res = await fetch(`http://105.110.206.237:5000/api/v1/posts/updatePost/${id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',

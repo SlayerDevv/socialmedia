@@ -2,6 +2,7 @@
 import {useState, useEffect} from 'react'
 import { useParams, useRouter } from 'next/navigation';
 import ProfileHeader from '@components/profile/ProfileHeader'
+import Navbar from '@/components/navbar';
 export default function Profile(){
     const router = useRouter()
     const token = document.cookie.split('token=').pop().split(';').shift();
@@ -9,7 +10,7 @@ export default function Profile(){
     const [user, setUser] = useState(null)
         const getUser = async() => {
             try {
-                const res = await fetch(`http://localhost:5000/api/v1/user/${username}`, {
+                const res = await fetch(`http://105.110.206.237:5000/api/v1/user/${username}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -30,10 +31,13 @@ export default function Profile(){
         useEffect(() => {
             getUser()
         }, [username])
+        
 
         return (
-            <div className=''>
+            <div className='flex flex-col space-y-3 justify-center items-center'>
+                <Navbar showMenu={true} avatar={user?.avatar} firstName={user?.firstName} lastName={user?.lastName} username={user?.username} />
                 <ProfileHeader id={user?.id} email={user?.email} avatar={user?.avatar} firstName={user?.firstName} lastName={user?.lastName} username={user?.username}/>
+                
             </div>
 
  

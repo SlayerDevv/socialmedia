@@ -3,7 +3,7 @@ import Image from "next/image";
 import jwt from 'jsonwebtoken'
 import { useContext, useEffect, useState } from "react";
 import AuthContext from '../context/AuthContext'
-import {useGetUserData} from '@/hooks/useGetUserData'
+import {useUser} from '../hooks/useUser'
 import useAuthRedirect from '../hooks/useAuthRedirect'
 import { useRouter } from "next/navigation";
 import Navbar from '@/components/navbar'
@@ -13,7 +13,7 @@ export default function Home() {
   const [user, setUser] = useState('')
   const { state } = useContext(AuthContext)
   const router = useRouter()
-  const {getData, error, loading} = useGetUserData()
+  const {getUser, error, loading} = useUser()
   const [token, setToken] = useState('')
 
   useEffect(() => {
@@ -25,7 +25,7 @@ export default function Home() {
 
   const fetchData = async() => {
     if (token) {
-      var data = await getData(token);
+      var data = await getUser(token);
       setUser(data.data)
     }
   }
@@ -36,7 +36,7 @@ export default function Home() {
 
   return (
     <main className="space-y-[18px] ">
-      <Navbar avatar={user.avatar} firstName={user.firstName} lastName={user.lastName} username={user.username} />
+      <Navbar avatar={user.avatar} firstName={user.firstName} lastName={user.lastName} username={user.username} showMenu={true} />
       <div className="flex justify-center">
         <CreatePost avatar={user.avatar} />      
       </div>

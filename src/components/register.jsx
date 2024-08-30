@@ -3,13 +3,13 @@ import React, { useContext, useEffect, useState } from "react";
 import { redirect } from "react-router-dom";
 import axios from "axios";
 import defaultImg from "../../public/images/default.png";
-const { useRegister } = require("@/hooks/useRegister");
+import {useAuth} from '@/hooks/useAuth'
 import AuthContext from "@/context/AuthContext";
 require("dotenv").config({ path: "../../backend/.env" });
 
 
 const RegisterComponent = () => {
-  const { register, loading, Error } = useRegister();
+  const { register, Error, loading} = useAuth()
   const [firstName, setFirstname] = React.useState("");
   const [lastName, setLastname] = React.useState("");
   const [email, setEmail] = React.useState("");
@@ -17,7 +17,7 @@ const RegisterComponent = () => {
   const [username, setUsername] = React.useState("");
   const [avatar, setAvatar] = useState("");
   useEffect(() => {
-    setAvatar("http://localhost:3000/images/default.png");
+    setAvatar(`${process.env.END_POINT}:3000/images/default.png`);
   }, []);
 
  /* useEffect(() => {
