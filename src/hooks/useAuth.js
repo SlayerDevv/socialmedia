@@ -1,7 +1,8 @@
 import AuthContext from "../context/AuthContext";
 import { useState, useContext } from "react";
 import { useRouter } from "next/navigation";
-require("dotenv").config();
+require("dotenv").config()
+
 import joi from "joi";
  export const useAuth = () => {
 
@@ -13,7 +14,8 @@ import joi from "joi";
   const login = async (email, password) => {
     setLoading(true);
     setError(null);
-    const res = await fetch(`${process.env.END_POINT}:5000/api/v1/auth/login`, {
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_END_POINT}:5000/api/v1/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -42,7 +44,7 @@ import joi from "joi";
 
 
   const logout = async () => {
-    const res = await fetch(`${process.env.END_POINT}:5000/api/v1/auth/logout`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_END_POINT}:5000/api/v1/auth/logout`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -115,7 +117,7 @@ import joi from "joi";
     });
     if (!JSON.stringify(error)) {
       const res = await fetch(
-        `${process.env.END_POINT}:5000/api/v1/auth/register`,
+        `${process.env.NEXT_PUBLIC_END_POINT}:5000/api/v1/auth/register`,
         {
           method: "POST",
           headers: {

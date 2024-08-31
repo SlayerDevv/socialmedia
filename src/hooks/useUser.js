@@ -5,7 +5,7 @@ export const useUser = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const getUser = async(token) => {
-        const res = await fetch(`${process.env.END_POINT}:5000/api/v1/user/get`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_END_POINT}:5000/api/v1/user/get`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -22,7 +22,7 @@ export const useUser = () => {
     }
 
     const UpdateUser = async(userame) => {
-        const res = await fetch(`${process.env.END_POINT}:5000/api/v1/user/update`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_END_POINT}:5000/api/v1/user/update`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

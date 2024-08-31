@@ -8,6 +8,7 @@ const ProfileHeader = ({
   firstName,
   lastName,
   avatar,
+  data
 }) => {
   const { uploadFile } = useFile();
  let dialogRef = useRef(null)
@@ -47,12 +48,12 @@ useEffect(() => {
         <div className=" bg-white shadow-[0_3px_10px_rgb(0,0,0,0.2)]  rounded-lg space-y-[20px] p-4 small:p-1">
         <div className="shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
           <img
-            src="http://105.110.206.237:3000/images/banner.png"
+            src={`${process.env.NEXT_PUBLIC_END_POINT}:3000/images/banner.png`}
             
             className="rounded-md "
           />
         </div>
-          <div className="flex items-start justify-start justify-between ">
+          <div className="flex items-start justify-between ">
             <div className="flex">
               <label htmlFor="pfpupload" className="cursor-pointer w-[100px] h-[100px] ">
                 <img
@@ -66,6 +67,7 @@ useEffect(() => {
               <input
                 onChange={(e) => UpdatePfp(e)}
                 type="file"
+                disabled={data != username ? true : false}
                 id="pfpupload"
                 name="pfpupload"
                 className="hidden"
@@ -103,7 +105,7 @@ useEffect(() => {
               </div>
               
             </div>
-            <button onClick={() => dialogRef.current.showModal()} className=" text-xl small:text-xs small:rounded-lg bg-slate-100 p-3  rounded-xl">
+            <button onClick={() => dialogRef.current.showModal()} className={`text-xl small:text-xs small:rounded-lg bg-slate-100 p-3  rounded-xl ${data != username ? "hidden" : ""}`}>
               Edit
             </button>
             <dialog ref={dialogRef} id="dialog" className="fixed overflow-hidden top-[60%] right-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[350px] h-[400px] backdrop:backdrop-blur-sm rounded-2xl shadow-[rgba(0,_0,_0,_0.4)_0px_30px_90px]" >
@@ -137,6 +139,7 @@ useEffect(() => {
         </div>
         
       </div>
+      
     </div>
   );
 };

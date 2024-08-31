@@ -9,7 +9,7 @@ export const usePost = () => {
             var postdoc = document.getElementById('post')
             postdoc.value = ''
            try {
-            const res = await fetch('http://localhost:5000/api/v1/posts/createPost', {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_END_POINT}:5000/api/v1/posts/createPost`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ export const usePost = () => {
         const UpdatePost = async(id, title, content) => {
             try {
                 setLoading(true)
-                const res = await fetch(`http://105.110.206.237:5000/api/v1/posts/updatePost/${id}`, {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_END_POINT}:5000/api/v1/posts/updatePost/${id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',

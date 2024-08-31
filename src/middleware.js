@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { VerifyToken } from "./utils/VerifyToken";
 
-export function middleware(req) {
+export async function middleware(req) {
   const token = req.cookies.get("token");
   console.log("Token:", token);
 
@@ -11,7 +11,7 @@ export function middleware(req) {
           return NextResponse.redirect(new URL("/login", req.url));
       }
   } else {
-      const isValid = VerifyToken(token.value);
+      const isValid = await VerifyToken(token.value);
       console.log("Token is valid:", isValid);
       if (!isValid) {
           console.log("Invalid token, redirecting to /login");

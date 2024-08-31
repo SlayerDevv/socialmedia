@@ -16,7 +16,7 @@ app.use(cors({
     origin: `http://${process.env.HOST}:3000`,
     allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Authorization'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    credentials: true, // allow session cookies
+    credentials: true, 
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -26,9 +26,14 @@ app.use('/api/v1/token', tokenRouter);
 app.use('/api/v1/posts', auth,postRouter);
 app.use('/api/v1/files', auth,fileRouter)
 
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
 
-
-
+app.get('/', (req, res, next) => {
+    res.send('Hello, World!')
+})
 
 const start = async(port) => {
    await server.listen(port, () => {

@@ -17,7 +17,7 @@ const RegisterComponent = () => {
   const [username, setUsername] = React.useState("");
   const [avatar, setAvatar] = useState("");
   useEffect(() => {
-    setAvatar(`${process.env.END_POINT}:3000/images/default.png`);
+    setAvatar(`${process.env.NEXT_PUBLIC_END_POINT}:3000/images/default.png`);
   }, []);
 
  /* useEffect(() => {

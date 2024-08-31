@@ -3,14 +3,21 @@ import {useState, useEffect} from 'react'
 import { useParams, useRouter } from 'next/navigation';
 import ProfileHeader from '@components/profile/ProfileHeader'
 import Navbar from '@/components/navbar';
+import { VerifyToken } from "../../../utils/VerifyToken";
+import {useUser} from '@/hooks/useUser'
 export default function Profile(){
     const router = useRouter()
+    const {getUser} = useUser()
     const token = document.cookie.split('token=').pop().split(';').shift();
+    
+   
     const {username} = useParams()
-    const [user, setUser] = useState(null)
-        const getUser = async() => {
+    const [user, setUser] = useState('')
+    const [decoded, setDecoded] = useState('')
+
+        const getuser = async() => {
             try {
-                const res = await fetch(`http://105.110.206.237:5000/api/v1/user/${username}`, {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_END_POINT}:5000/api/v1/user/${username}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -28,15 +35,25 @@ export default function Profile(){
             }
             
         }
-        useEffect(() => {
-            getUser()
-        }, [username])
-        
 
+        const fetchData = async() => {
+            if (token){
+                var data = await getUser(token);
+                setDecoded(data.data)
+                
+            }
+        }
+
+        useEffect(() => {
+            getuser()
+            fetchData()
+        }, [username, token])
+        
+        
         return (
             <div className='flex flex-col space-y-3 justify-center items-center'>
                 <Navbar showMenu={true} avatar={user?.avatar} firstName={user?.firstName} lastName={user?.lastName} username={user?.username} />
-                <ProfileHeader id={user?.id} email={user?.email} avatar={user?.avatar} firstName={user?.firstName} lastName={user?.lastName} username={user?.username}/>
+                <ProfileHeader data={decoded?.username} id={user?.id} email={user?.email} avatar={user?.avatar} firstName={user?.firstName} lastName={user?.lastName} username={user?.username}/>
                 
             </div>
 
