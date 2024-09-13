@@ -1,15 +1,15 @@
-
+import axios from 'axios'
 export const useFile = () => {
-    const uploadFile = async(formData, token) => {
+    const uploadFile = async(formData,token) => {
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_END_POINT}:5000/api/v1/files/save`, {
-                method: 'POST',
+
+            const {data} = await axios.post(`${process.env.NEXT_PUBLIC_END_POINT}:5000/api/v1/files/save`, formData,{
                 headers: {
-                    'authorization': `Bearer ${token}`
-                },
-                body: formData,
+                    'Authorization': `Bearer ${token}`,
+                  //  'Content-Type': 'multipart/form-data',
+                }
             })
-            const data = await res.json();
+ 
             return data;
         }catch (err) {
             throw new Error('Error uploading file');

@@ -5,7 +5,7 @@ export async function VerifyToken(token) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      authorization: `Bearer ${token}`,
+      'Authorization': `Bearer ${token}`,
     },
   });
 

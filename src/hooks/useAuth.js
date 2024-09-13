@@ -1,6 +1,7 @@
 import AuthContext from "../context/AuthContext";
 import { useState, useContext } from "react";
 import { useRouter } from "next/navigation";
+import axios from 'axios'
 require("dotenv").config()
 
 import joi from "joi";
@@ -14,23 +15,13 @@ import joi from "joi";
   const login = async (email, password) => {
     setLoading(true);
     setError(null);
-
-    const res = await fetch(`${process.env.NEXT_PUBLIC_END_POINT}:5000/api/v1/auth/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email,
-        password,
-      }),
+    console.log(email, password);
+  try {
+    const {data} = await axios.post(`${process.env.NEXT_PUBLIC_END_POINT}:5000/api/v1/auth/login`, {
+      email,
+      password,
     });
-    const data = await res.json();
-    if (!res.ok) {
-      setError(data.error);
-      setLoading(false);
-    } else {
-      const d = new Date();
+   const d = new Date();
       d.setTime(d.getTime() + 1000 * 60 * 60 * 24 * 10);
       let expirationDate = d.toUTCString();
       document.cookie = `token=${data.message}; expires=${expirationDate}; path=/`;
@@ -38,23 +29,23 @@ import joi from "joi";
       dispatch.dispatch({ type: "LOGIN", payload: data });
       setLoading(false);
       router.push("/");
-    }
-  return { login, Error, loading };
+  }catch (response){
+    console.log(response);
+  }
+
+
 };
 
 
   const logout = async () => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_END_POINT}:5000/api/v1/auth/logout`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
-    if (res.ok) {
+    try {
+    const {data} = await axios.post(`${process.env.NEXT_PUBLIC_END_POINT}:5000/api/v1/auth/logout`)
+      if (data){
       dispatch({ type: "LOGOUT" });
     }
-  return { logout };
+  }catch (err){
+    console.log(err)
+  }
    }
 
   const register = async (
@@ -116,42 +107,42 @@ import joi from "joi";
       Password: password,
     });
     if (!JSON.stringify(error)) {
-      const res = await fetch(
+      try {
+      const {data} = await axios.post(
         `${process.env.NEXT_PUBLIC_END_POINT}:5000/api/v1/auth/register`,
         {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            username,
-            password,
-            firstName,
-            lastName,
-            avatar,
-          }),
+          email,
+          username,
+          password,
+          firstName,
+          lastName,
+          avatar,
         }
       );
-      const data = await res.json();
-      if (!res.ok) {
-        setLoading(false);
-        console.log("RUN");
-        setError(error);
-      } else {
-        const d = new Date();
-        d.setTime(d.getTime() + 1000 * 60 * 60 * 24 * 10);
-        let expirationDate = d.toUTCString();
-        document.cookie = `token=${data.msg}; expires=${expirationDate}; path=/`;
-        dispatch.dispatch({ type: "LOGIN", payload: data });
-        setLoading(false);
-        router.push("/");
-      }
-      return data;
-    } else {
+      setLoading(false);
+      console.log("RUN");
+      setError(error);
+      const d = new Date();
+      d.setTime(d.getTime() + 1000 * 60 * 60 * 24 * 10);
+      let expirationDate = d.toUTCString();
+      document.cookie = `token=${data.msg}; expires=${expirationDate}; path=/`;
+      dispatch.dispatch({ type: "LOGIN", payload: data });
+      setLoading(false);
+      router.push("/");
+    return data;
+    }catch (e){
       console.log("run");
       setError(/*JSON.stringify(error.message).split('"')[1]*/ error.details);
       setLoading(false);
+    }
+
+
+        
+
+
+       
+
+
     }
   };
   return { register,logout,login, Error, loading };

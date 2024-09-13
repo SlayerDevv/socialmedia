@@ -55,11 +55,10 @@ const userSchema = new Schema({
     avatar: {
         type: String,
     },
-    isActive: {
-        type: Boolean,
-        default: false,
-    },
-    Posts : [{type: Schema.Types.Mixed, ref: 'post'}]
+    Posts : {
+        type: [Schema.Types.ObjectId],
+        ref: 'Post'
+    }
 })
 
 userSchema.pre('save', async function(next){
@@ -81,9 +80,13 @@ userSchema.methods.CheckPassword = async function(password){
     }
 }
 
-userSchema.methods.CreateJWT = async(_id, email) => {
-    const token = await jwt.sign({user_id: _id, email: email}, process.env.SECRET_KEY, {expiresIn: '10d'})
-    return token
+userSchema.methods.CreateJWT = async function(){
+    let posts = [];
+    for (let post in posts){
+        let p = await Post.findOne({author: this._id})
+        posts.push(p)
+    }
+    return await jwt.sign({_id: this._id, id: this.id, email: this.email, firstName: this.firstName, lastName: this.lastName, avatar: this.avatar, posts}, process.env.SECRET_KEY, {expiresIn: '10d'})
 }
 
 const User = model('User', userSchema)

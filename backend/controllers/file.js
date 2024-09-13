@@ -5,46 +5,51 @@ const multer = require("multer");
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
+const post = require("../models/post");
 const storage = multer.memoryStorage();
-const upload = multer({ storage });
+const upload = multer({
+  storage: storage,
+});
+var multipleUpload = upload.fields([
+  { name: "avatar", maxCount: 1 },
+  { name: "PostAttachment", maxCount: 10 },
+]);
 require("dotenv").config();
+
 const SaveFile = async (req, res) => {
-  const file = req.file;
-  const headers = req.headers['authorization'];
-  const token = headers.split(" ")[1];
-  if (!token) {
-    return res.status(401).json({ msg: "No token, authorization denied" });
-  }
-  const decoded = await jwt.decode(token, process.env.SECRET_KEY)
-  if (!decoded) return res.status(401).json({ msg: "Token is not valid" });
-  const user = await User.findOne({ email: decoded.email });
-  if (!file) {
-    return res.status(400).json({ msg: "No file uploaded" });
-  }
+  let token = req.headers.authorization.split(' ')[1];
+  let decoded = jwt.decode(token, process.env.SECRET_KEY)
+  if (req.files) {
+    if (req.files.PostAttachment) {
+      let arr = [];
+      for (let [key, value] of req.files.PostAttachment.entries()) {
+        const PostParams = {
+          Bucket: process.env.AWS_BUCKET_NAME,
+          Key: `${uuidv4()}-${value.originalname}-${Date.now()}`,
+          Body: value.buffer,
+          ContentType: value.mimetype,
+          ACL: "public-read",
+        };
+        arr.push(`${process.env.PUBLIC_URL}/${process.env.AWS_BUCKET_NAME}/${PostParams.Key}`);
+        await client.send(new PutObjectCommand(PostParams));
+      }
+      res.json({ urls: arr });
+    } else if (req.files.avatar) {
+      const AvatarParams = {
+        Bucket: process.env.AWS_BUCKET_NAME,
+        Key: `${uuidv4()}-${req.files.avatar[0].originalname}-${Date.now()}`,
+        Body: req.files.avatar[0].buffer,
+        ContentType: req.files.avatar[0].mimetype,
+        ACL: "public-read",
+      };
 
-  const fileName = `${uuidv4()}-${file.originalname}`;
-
-  const params = {
-    Bucket: process.env.AWS_BUCKET_NAME,
-    Key: fileName,
-    Body: file.buffer,
-    ContentType: file.mimetype,
-    ACL: "public-read",
-  };
-  try {
-    const command = new PutObjectCommand(params);
-    const data = await client.send(command);
-    let url = `${process.env.PUBLIC_URL}/${process.env.AWS_BUCKET_NAME}/${fileName}`
-   await user.updateOne({avatar: url})
-    res
-      .status(200)
-      .json({
-        url: url,
+      await client.send(new PutObjectCommand(AvatarParams));
+      await User.findOne({email: decoded.email}).updateOne({avatar: `${process.env.PUBLIC_URL}/${process.env.AWS_BUCKET_NAME}/${AvatarParams.Key}`})
+      return res.status(201).json({
+        url: `${process.env.PUBLIC_URL}/${process.env.AWS_BUCKET_NAME}/${AvatarParams.Key}`,
       });
-  } catch (err) {
-    console.error("Error uploading file:", err);
-    res.status(500).json({ error: "Error uploading file" });
+    }
   }
 };
 
-module.exports = { SaveFile, upload };
+module.exports = { SaveFile, upload, multipleUpload };

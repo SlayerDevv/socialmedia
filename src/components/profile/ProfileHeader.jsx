@@ -39,7 +39,10 @@ useEffect(() => {
     if (file) {
       let formData = new FormData();
       formData.append("avatar", file);
-      uploadFile(formData, token).then((data) => {});
+      uploadFile(formData, token).then(() => {
+        location.reload();
+      })
+      
     }
   };
   return (
@@ -55,23 +58,23 @@ useEffect(() => {
         </div>
           <div className="flex items-start justify-between ">
             <div className="flex">
-              <label htmlFor="pfpupload" className="cursor-pointer w-[100px] h-[100px] ">
+              <label htmlFor="avatar" className="cursor-pointer w-[100px] h-[100px] ">
                 <img
                   id="pfp"
-           
                   src={avatar}
                   alt="pfp"
                   className="rounded-full shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
                 />
               </label>
               <input
-                onChange={(e) => UpdatePfp(e)}
+                onChange={(e) => {UpdatePfp(e)}}
                 type="file"
                 disabled={data != username ? true : false}
-                id="pfpupload"
-                name="pfpupload"
+                id="avatar"
+                name="avatar"
                 className="hidden"
               />
+              
               <div className="flex-1">
                 <div>
                 <h1 className="text-3xl small:text-xl font-bold font-poppins text-black">

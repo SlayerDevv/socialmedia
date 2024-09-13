@@ -4,7 +4,9 @@ import { useState, useRef, useEffect } from "react";
 import clsx from "clsx";
 import { CircleUserRound, Settings, LogOut } from "lucide-react";
 import {useAuth} from '../hooks/useAuth'
+import { useRouter } from "next/navigation";
 const Menu = ({avatar, username, firstName, lastName}) => {
+    const router = useRouter()
     const {logout} = useAuth()
     const [Open, setOpen] = useState(false);
     const MenuRef = useRef(null)
@@ -21,17 +23,19 @@ const Menu = ({avatar, username, firstName, lastName}) => {
     }, []);
     return (
         <div className="space-y-1">
-            <div onClick={() => setOpen(!Open)} ref={MenuRef} className="flex space-x-3 items-center font-lato hover:bg-slate-100/30 duration-300 p-2 rounded-xl cursor-pointer">
-            <h1>{firstName + '' + lastName}</h1>
+            <div onClick={() => setOpen(!Open)}  className="flex space-x-3 items-center font-lato hover:bg-slate-100/30 duration-300 p-2 rounded-xl cursor-pointer">
+            <h1 className="space-x-1"><span>{firstName}</span><span>{lastName}</span></h1>
             <Image src={avatar} unoptimized width={40} height={40} className="rounded-full" />
             </div>
-            <div className={clsx("absolute bg-[rgba(199,196,196,0.31)] rounded-[16px] shadow-[0_4px_30px_rgba(0,0,0,0.1)] backdrop-blur-[20px] border border-[rgba(199,196,196,0.35)] shadow-[rgba(0,_0,_0,_0.25)_0px_25px_50px_-12px]  w-[150px] rounded-2xl", Open ? "transition-all duration-500 ease-in-out" : "opacity-0")}>
-            <ul className="flex-1 text-lg space-y-3 my-3 px-3">
-            <li className="flex justify-between hover:bg-slate-50/40 p-3 rounded-lg cursor-pointer"><a href={`/profile/${username}`}>Profile</a> <CircleUserRound /></li>
-            <li className="flex justify-between hover:bg-slate-50/40 p-3 rounded-lg cursor-pointer"><a href="">Settings</a><Settings /></li>
-            <li onClick={() => logout()} className="flex justify-between hover:bg-slate-50/40 p-3 rounded-lg cursor-pointer"><a href="">Logout</a><LogOut /></li>
-            </ul>
-            </div>
+            {Open && (
+  <div ref={MenuRef} className="absolute duration-300 transition-all ease-in-out bg-[rgba(199,196,196,0.31)] rounded-[16px] backdrop-blur-[20px] border border-[rgba(199,196,196,0.35)] shadow-[rgba(0,_0,_0,_0.25)_0px_25px_50px_-12px] w-[150px]">
+    <ul className="flex-1 text-lg space-y-3 my-3 px-3">
+      <li onClick={() => router.push(`/profile/${username}`)} className="flex justify-between hover:bg-slate-50/40 p-3 rounded-lg cursor-pointer">Profile<CircleUserRound /></li>
+      <li className="flex justify-between hover:bg-slate-50/40 p-3 rounded-lg cursor-pointer">Settings<Settings /></li>
+      <li onClick={() => logout()} className="flex justify-between hover:bg-slate-50/40 p-3 rounded-lg cursor-pointer">Logout<LogOut /></li>
+    </ul>
+  </div>
+)}
         </div>
     )
 }

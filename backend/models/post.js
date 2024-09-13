@@ -8,7 +8,8 @@ const postSchema = new Schema({
         unque: true,
     },
     author : {
-        type: String,
+        type: Schema.Types.ObjectId,
+        required: true,
         ref: 'User'
     },
     content: {
@@ -53,13 +54,9 @@ const postSchema = new Schema({
     attachements: {
         type: [String],
         default: [],
-        enum: ['image', 'video'],
-        validate: {
-            validator: (v) => v.every((item) => ['image', 'video'].includes(item)),
-            message: 'Invalid attachment type',
-        },
+
     }
 })
 
-const Post = model('post', postSchema)
+const Post = model('Post', postSchema)
 module.exports = Post;

@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 
 const Register = async (req, res) => {
   const { firstName, lastName, email, password, username, avatar } = req.body;
+
   if (!firstName || !lastName) {
     return res
       .status(400)
@@ -25,7 +26,7 @@ const Register = async (req, res) => {
       password: password,
       avatar,
     });
-    const token = await user.CreateJWT(user._id, user.email);
+    const token = await user.CreateJWT();
     return res.status(200).json({ msg: token });
   } catch (err) {
     console.error(err);
@@ -52,7 +53,7 @@ const Login = async (req, res) => {
     }
   }
   try {
-    const token = await user.CreateJWT(user._id, user.email);
+    const token = await user.CreateJWT();
     res.cookie("tokens", token, { httpOnly: true });
     return res.status(200).json({ message: token });
   } catch (err) {

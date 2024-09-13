@@ -10,7 +10,7 @@ const search = ({size}) => {
           placeholder='Search'
         />
       </div>
-    )
+    )                               
 }
 
 export default search

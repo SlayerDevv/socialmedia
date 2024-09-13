@@ -21,8 +21,8 @@ const GetByUsername = async (req, res) => {
 };
 
 const getUser = async (req, res) => {
-  const header = req.headers["authorization"];
-  const token = header.split(" ")[1];
+  const token = req.headers.authorization.split(' ')[1];
+
   if (!token) {
     return res.status(400).json({ msg: "No token, authorization denied" });
   }
@@ -30,7 +30,7 @@ const getUser = async (req, res) => {
   if (!verify) {
     return res.status(400).json({ msg: "Token is not valid" });
   }
-  const user = await User.findOne({ email: verify.email });
+  const user = await User.findOne({ _id: verify._id });
   if (!user) return res.status(400).json({ msg: "User not found" });
   try {
     res.status(200).json({ data: user });

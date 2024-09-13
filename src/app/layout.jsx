@@ -14,7 +14,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <AuthProvider>
-      <body className={clsx('', poppins.className)}>{children}</body>
+      <body className={clsx('bg-[#EFF2F6] ', poppins.className)}>{children}</body>
       </AuthProvider>
     </html>
   );

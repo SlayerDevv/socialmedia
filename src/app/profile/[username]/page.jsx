@@ -14,6 +14,9 @@ export default function Profile(){
     const {username} = useParams()
     const [user, setUser] = useState('')
     const [decoded, setDecoded] = useState('')
+    const [Loaded, setLoaded] = useState(false)
+    const [error, setError] = useState(null)
+    const [posts, setPosts] = useState([])
 
         const getuser = async() => {
             try {
@@ -28,7 +31,7 @@ export default function Profile(){
                 if (res.ok){
                     setUser(response.data)
                 }else {
-                    console.log('error')
+                    setError(<h1 className='flex h-screen items-center justify-center text-3xl text-indigo-400'>Can't find that user 🤔</h1>)
                 }
             }catch (err){
             return router.push('/login')
@@ -38,9 +41,10 @@ export default function Profile(){
 
         const fetchData = async() => {
             if (token){
+                setLoaded(false)
                 var data = await getUser(token);
                 setDecoded(data.data)
-                
+                setLoaded(true)
             }
         }
 
@@ -51,13 +55,14 @@ export default function Profile(){
         
         
         return (
-            <div className='flex flex-col space-y-3 justify-center items-center'>
-                <Navbar showMenu={true} avatar={user?.avatar} firstName={user?.firstName} lastName={user?.lastName} username={user?.username} />
+            error ? error : (Loaded && (
+                <div className='flex flex-col space-y-3 justify-center items-center'>
+                <Navbar showMenu={true} avatar={user?.avatar} firstName={user?.firstName} lastName={user?.lastName} username={user?.username}  />
                 <ProfileHeader data={decoded?.username} id={user?.id} email={user?.email} avatar={user?.avatar} firstName={user?.firstName} lastName={user?.lastName} username={user?.username}/>
                 
             </div>
+            ))
 
- 
         )
 
 }
